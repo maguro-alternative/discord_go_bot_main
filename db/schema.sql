@@ -1,17 +1,73 @@
 CREATE TABLE IF NOT EXISTS guild_set_permissions (
-    guild_id NUMERIC PRIMARY KEY,
-    line_permission NUMERIC NOT NULL DEFAULT 8,
-    line_user_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    line_role_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    line_bot_permission NUMERIC NOT NULL DEFAULT 8,
-    line_bot_user_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    line_bot_role_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    vc_permission NUMERIC NOT NULL DEFAULT 8,
-    vc_user_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    vc_role_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    webhook_permission NUMERIC NOT NULL DEFAULT 8,
-    webhook_user_id_permission NUMERIC[] NOT NULL DEFAULT '{}',
-    webhook_role_id_permission NUMERIC[] NOT NULL DEFAULT '{}'
+    guild_id NUMERIC PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS line_permissions (
+    guild_id NUMERIC PRIMARY KEY REFERENCES guild_set_permissions(guild_id),
+    permission NUMERIC NOT NULL DEFAULT 8
+);
+
+CREATE TABLE IF NOT EXISTS line_user_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES line_permissions(id),
+    user_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS line_role_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES line_permissions(guild_id),
+    role_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS line_bot_permissions (
+    guild_id NUMERIC PRIMARY KEY REFERENCES guild_set_permissions(guild_id),
+    permission NUMERIC NOT NULL DEFAULT 8
+);
+
+CREATE TABLE IF NOT EXISTS line_bot_user_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES line_bot_permissions(id),
+    user_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS line_bot_role_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES line_bot_permissions(id),
+    role_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vc_permissions (
+    guild_id NUMERIC PRIMARY KEY REFERENCES guild_set_permissions(guild_id),
+    permission NUMERIC NOT NULL DEFAULT 8
+);
+
+CREATE TABLE IF NOT EXISTS vc_user_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES vc_permissions(id),
+    user_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vc_role_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES vc_permissions(id),
+    role_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS webhook_permissions (
+    guild_id NUMERIC PRIMARY KEY REFERENCES guild_set_permissions(guild_id),
+    permission NUMERIC NOT NULL DEFAULT 8
+);
+
+CREATE TABLE IF NOT EXISTS webhook_user_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES webhook_permissions(id),
+    user_id NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS webhook_role_permissions (
+    id SERIAL PRIMARY KEY,
+    permission_id NUMERIC NOT NULL REFERENCES webhook_permissions(id),
+    role_id NUMERIC NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS line_bot (
